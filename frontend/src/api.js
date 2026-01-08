@@ -53,14 +53,12 @@ export const api = {
         return res.json();
     },
 
-    // CRUD: Update (Update a record's note)
+    // CRUD: Update (Update a record's note or dates)
     updateRecord: async (id, updates) => {
-        // Backend expects 'note' query param or body? Checking main.py:
-        // @app.put("/history/{id}") def update_history(id: int, note: str, ...)
-        // It expects 'note' as a query parameter based on default FastAPI behavior if not specified as Body.
-        // Let's adjust to pass it correctly.
-        const res = await fetch(`${API_URL}/history/${id}?note=${encodeURIComponent(updates.note)}`, {
-            method: 'PUT'
+        const res = await fetch(`${API_URL}/history/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updates)
         });
         if (!res.ok) throw new Error('Failed to update record');
         return res.json();

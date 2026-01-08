@@ -5,6 +5,8 @@ function HistoryPanel({ refreshTrigger }) {
     const [history, setHistory] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [editNote, setEditNote] = useState('');
+    const [editStartDate, setEditStartDate] = useState('');
+    const [editEndDate, setEditEndDate] = useState('');
 
     const loadHistory = async () => {
         try {
@@ -20,7 +22,7 @@ function HistoryPanel({ refreshTrigger }) {
     }, [refreshTrigger]);
 
     const handleDelete = async (e, id) => {
-        e.stopPropagation(); // Prevent triggering card clicks if added later
+        e.stopPropagation();
         if (window.confirm('Delete this record?')) {
             await api.deleteRecord(id);
             loadHistory();
@@ -30,10 +32,23 @@ function HistoryPanel({ refreshTrigger }) {
     const startEdit = (item) => {
         setEditingId(item.id);
         setEditNote(item.note || '');
+        setEditStartDate(item.start_date || '');
+        setEditEndDate(item.end_date || '');
+    };
+
+    const cancelEdit = () => {
+        setEditingId(null);
+        setEditNote('');
+        setEditStartDate('');
+        setEditEndDate('');
     };
 
     const saveEdit = async (id) => {
-        await api.updateRecord(id, { note: editNote });
+        await api.updateRecord(id, { 
+            note: editNote,
+            start_date: editStartDate,
+            end_date: editEndDate
+        });
         setEditingId(null);
         loadHistory();
     };
@@ -81,27 +96,78 @@ function HistoryPanel({ refreshTrigger }) {
             
             {history.map(item => (
                 <div key={item.id} className="history-card">
-                    {/* Header: Icon + Info */}
                     <div className="history-header">
                         <div className="history-icon-wrapper">
                             {getWeatherIcon(item.description)}
                         </div>
                         <div className="history-info">
                             <h4 className="history-location" title={item.location}>{item.location}</h4>
-                            <div className="history-meta">
-                                {item.date_range && (
-                                    <span className="history-date-range">📅 {item.date_range}</span>
-                                )}
-                                <span>{new Date(item.timestamp).toLocaleDateString()} • {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                            </div>
                         </div>
-                        <button 
-                            className="history-btn delete-btn" 
-                            onClick={(e) => handleDelete(e, item.id)}
-                            title="Delete"
-                        >
-                            ✕
-                        </button>
+                        
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            {editingId === item.id ? (
+                                <>
+                                    <button 
+                                        className="history-btn save-btn" 
+                                        onClick={() => saveEdit(item.id)}
+                                        title="Save Changes"
+                                    >
+                                        ✓
+                                    </button>
+                                    <button 
+                                        className="history-btn" 
+                                        onClick={cancelEdit}
+                                        title="Cancel"
+                                    >
+                                        ✕
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button 
+                                        className="history-btn" 
+                                        onClick={() => startEdit(item)}
+                                        title="Edit"
+                                     >
+                                        ✎
+                                    </button>
+                                    <button 
+                                        className="history-btn delete-btn" 
+                                        onClick={(e) => handleDelete(e, item.id)}
+                                        title="Delete"
+                                    >
+                                        🗑️
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Date Range / Edit Inputs - Moved to separate row for full width */}
+                    <div className="history-meta">
+                        {editingId === item.id ? (
+                            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
+                                <input 
+                                    type="date"
+                                    value={editStartDate}
+                                    onChange={(e) => setEditStartDate(e.target.value)}
+                                    style={{ padding: '0.2rem', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.2)', color: 'white', fontSize: '0.8rem' }}
+                                />
+                                <span style={{ alignSelf: 'center', color: 'rgba(255,255,255,0.5)' }}>to</span>
+                                <input 
+                                    type="date"
+                                    value={editEndDate}
+                                    onChange={(e) => setEditEndDate(e.target.value)}
+                                    style={{ padding: '0.2rem', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.2)', color: 'white', fontSize: '0.8rem' }}
+                                />
+                            </div>
+                        ) : (
+                            <>
+                                {item.start_date && item.end_date && (
+                                    <span className="history-date-range">📅 {item.start_date} to {item.end_date}</span>
+                                )}
+                            </>
+                        )}
                     </div>
 
                     {/* Stats Grid */}
@@ -125,19 +191,14 @@ function HistoryPanel({ refreshTrigger }) {
                                     value={editNote} 
                                     onChange={(e) => setEditNote(e.target.value)} 
                                     placeholder="Add a note..." 
-                                    autoFocus
                                 />
-                                <button className="history-btn save-btn" onClick={() => saveEdit(item.id)}>✓</button>
                             </div>
                         ) : (
-                            <div 
-                                className={`history-note-display ${item.note ? 'has-note' : 'no-note'}`}
-                                onClick={() => startEdit(item)}
-                            >
+                            <div className={`history-note-display ${item.note ? 'has-note' : 'no-note'}`}>
                                 {item.note ? (
                                     <span>📝 {item.note}</span>
                                 ) : (
-                                    <span>+ Add note...</span>
+                                    <span style={{ opacity: 0.5 }}>...</span>
                                 )}
                             </div>
                         )}

@@ -27,11 +27,17 @@ class WeatherBase(BaseModel):
     location: str
     temperature: float
     description: str
-    date_range: Optional[str] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
     note: Optional[str] = None
 
 class WeatherCreate(WeatherBase):
     pass
+
+class WeatherUpdate(BaseModel):
+    note: Optional[str] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
 
 class Weather(WeatherBase):
     id: int
@@ -116,9 +122,10 @@ def get_current_weather(location: str, unit: str = "celsius", start_date: str = 
     if "current" in weather_res:
         response["current"] = weather_res["current"]
     
-    # Include date range if specified
+    # Include separate dates if specified
     if start_date and end_date:
-        response["date_range"] = f"{start_date} to {end_date}"
+        response["start_date"] = start_date
+        response["end_date"] = end_date
     
     return response
 
@@ -145,7 +152,8 @@ def create_history(item: WeatherCreate, db: Session = Depends(database.get_db)):
         location=item.location,
         temperature=item.temperature,
         description=item.description,
-        date_range=item.date_range,
+        start_date=item.start_date,
+        end_date=item.end_date,
         note=item.note,
         timestamp=datetime.datetime.utcnow()
     )
@@ -160,11 +168,19 @@ def read_history(skip: int = 0, limit: int = 100, db: Session = Depends(database
     return items
 
 @app.put("/history/{id}", response_model=Weather)
-def update_history(id: int, note: str, db: Session = Depends(database.get_db)):
+def update_history(id: int, request: WeatherUpdate, db: Session = Depends(database.get_db)):
     item = db.query(models.WeatherHistory).filter(models.WeatherHistory.id == id).first()
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
-    item.note = note
+    
+    # Update fields if provided
+    if request.note is not None:
+        item.note = request.note
+    if request.start_date is not None:
+        item.start_date = request.start_date
+    if request.end_date is not None:
+        item.end_date = request.end_date
+        
     db.commit()
     db.refresh(item)
     return item

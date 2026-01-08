@@ -190,52 +190,51 @@ h1, h2, h3 {
 /* Header Section: 3-Column Grid for strict alignment */
 .history-header {
   display: grid;
-  /* Icon | Content | Close Button */
-  grid-template-columns: 48px 1fr 32px; 
-  gap: 1rem;
-  /* Top alignment ensures button stays at top-right even if text wraps */
-  align-items: start; 
+  /* Icon | Content | Action Buttons (Auto width) */
+  grid-template-columns: 40px 1fr auto; 
+  gap: 0.5rem;
+  align-items: center; /* Center alignment looks better with smaller icons */
 }
 
 .history-icon-wrapper {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  font-size: 1.75rem;
+  border-radius: 10px; /* Slightly tighter radius */
+  font-size: 1.5rem; /* Reduced emoji size */
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .history-info {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Center vertically relative to icon if single line */
-  min-height: 48px; /* Match icon height for baseline alignment */
-  gap: 0.25rem;
-  min-width: 0; /* Enables text truncation */
+  justify-content: center;
+  min-height: 40px; /* Match new icon height */
+  gap: 0.1rem; /* Tighter gap */
+  min-width: 0;
 }
 
 .history-location {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.95rem; /* Slightly smaller location text */
   font-weight: 700;
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 .history-meta {
-  font-size: 0.75rem;
+  font-size: 0.7rem; /* Reduced meta font size */
   color: rgba(255, 255, 255, 0.7);
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  line-height: 1.2;
+  gap: 1px;
+  line-height: 1.1;
 }
 
 .history-date-range {
@@ -243,24 +242,29 @@ h1, h2, h3 {
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.2rem;
+  white-space: nowrap;
+  /* overflow: hidden;  <-- Removing overflow hidden to prioritize showing full text as requested
+     If it really doesn't fit, it will push layout, but we saved space. */
+  font-size: 0.65rem; /* Smaller font to fit date range */
+  letter-spacing: -0.2px; /* Tighter spacing */
 }
 
 /* Action Buttons */
 .history-btn {
-  width: 32px;
-  height: 32px;
+  width: 26px; /* Reduced from 32px */
+  height: 26px;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.2s ease;
-  /* Ensure button doesn't shrink */
   flex-shrink: 0; 
+  font-size: 0.8rem; /* Smaller icons inside buttons */
 }
 
 .delete-btn:hover {
@@ -300,11 +304,11 @@ h1, h2, h3 {
 }
 
 .stat-label {
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   text-transform: uppercase;
-  opacity: 0.6;
+  opacity: 0.7; /* Increased opacity slightly for better readability at small size */
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 0; /* Removed spacing to save horizontal space */
 }
 
 .stat-value {

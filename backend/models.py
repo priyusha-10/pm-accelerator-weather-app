@@ -9,6 +9,7 @@ class WeatherHistory(Base):
     location = Column(String, index=True)
     temperature = Column(Float)
     description = Column(String)
-    date_range = Column(String, nullable=True) # Storing as string for simplicity
+    start_date = Column(String, nullable=True)
+    end_date = Column(String, nullable=True)
     note = Column(String, nullable=True)
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
