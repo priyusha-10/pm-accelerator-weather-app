@@ -8,6 +8,7 @@ function HistoryPanel({ refreshTrigger }) {
     const [editStartDate, setEditStartDate] = useState('');
     const [editEndDate, setEditEndDate] = useState('');
     const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+    const [exportFormat, setExportFormat] = useState('json');
 
     const loadHistory = async () => {
         try {
@@ -68,13 +69,79 @@ function HistoryPanel({ refreshTrigger }) {
         loadHistory();
     };
 
+    const convertToCSV = (data) => {
+        const headers = ["ID", "Location", "Temperature", "Description", "Start Date", "End Date", "Note", "Timestamp"];
+        const rows = data.map(item => [
+            item.id,
+            `"${item.location}"`,
+            item.temperature,
+            `"${getWeatherDesc(item.description)}"`,
+            item.start_date || '',
+            item.end_date || '',
+            `"${(item.note || '').replace(/"/g, '""')}"`,
+            item.timestamp
+        ]);
+        return [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    };
+
+    const convertToMarkdown = (data) => {
+        let md = "| Location | Temp | Condition | Date Range | Note |\n";
+        md += "|---|---|---|---|---|\n";
+        data.forEach(item => {
+            const dateRange = item.start_date && item.end_date ? `${item.start_date} to ${item.end_date}` : '-';
+            md += `| ${item.location} | ${Math.round(item.temperature)}° | ${getWeatherDesc(item.description)} | ${dateRange} | ${item.note || '-'} |\n`;
+        });
+        return md;
+    };
+
+    const convertToXML = (data) => {
+        let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<weatherHistory>\n';
+        data.forEach(item => {
+            xml += `  <record>\n`;
+            xml += `    <id>${item.id}</id>\n`;
+            xml += `    <location>${item.location}</location>\n`;
+            xml += `    <temperature>${item.temperature}</temperature>\n`;
+            xml += `    <condition>${getWeatherDesc(item.description)}</condition>\n`;
+            xml += `    <startDate>${item.start_date || ''}</startDate>\n`;
+            xml += `    <endDate>${item.end_date || ''}</endDate>\n`;
+            xml += `    <note>${item.note || ''}</note>\n`;
+            xml += `    <timestamp>${item.timestamp}</timestamp>\n`;
+            xml += `  </record>\n`;
+        });
+        xml += '</weatherHistory>';
+        return xml;
+    };
+
     const handleExport = () => {
-        const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-            JSON.stringify(history, null, 2)
-        )}`;
+        let content = '';
+        let type = '';
+        let extension = '';
+
+        switch (exportFormat) {
+            case 'csv':
+                content = convertToCSV(history);
+                type = 'text/csv';
+                extension = 'csv';
+                break;
+            case 'md':
+                content = convertToMarkdown(history);
+                type = 'text/markdown';
+                extension = 'md';
+                break;
+            case 'xml':
+                content = convertToXML(history);
+                type = 'application/xml';
+                extension = 'xml';
+                break;
+            default:
+                content = JSON.stringify(history, null, 2);
+                type = 'application/json';
+                extension = 'json';
+        }
+
         const link = document.createElement("a");
-        link.href = jsonString;
-        link.download = "weather_history.json";
+        link.href = `data:${type};charset=utf-8,${encodeURIComponent(content)}`;
+        link.download = `weather_history.${extension}`;
         link.click();
     };
 
@@ -104,15 +171,35 @@ function HistoryPanel({ refreshTrigger }) {
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>
-                <h3 className="history-title" style={{ margin: 0, border: 'none', padding: 0, fontSize: '1.1rem' }}>Search History</h3>
+                <h3 className="history-title" style={{ margin: 0, border: 'none', padding: 0, fontSize: '1.1rem' }}>History</h3>
                 {history.length > 0 && (
-                    <button 
-                        onClick={handleExport}
-                        className="history-export-btn"
-                        style={{ marginTop: 0, width: 'auto', padding: '0.3rem 0.6rem', fontSize: '0.7rem' }}
-                    >
-                        📥 Export JSON
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                        <select 
+                            value={exportFormat} 
+                            onChange={(e) => setExportFormat(e.target.value)}
+                            className="history-export-select"
+                        >
+                            <option value="json">JSON</option>
+                            <option value="csv">CSV</option>
+                            <option value="md">Markdown</option>
+                            <option value="xml">XML</option>
+                        </select>
+                        <button 
+                            onClick={handleExport}
+                            className="history-export-btn"
+                            style={{ 
+                                marginTop: 0, 
+                                width: 'auto', 
+                                padding: '0 0.8rem', /* Horizontal padding only, height fixed by class/flex */
+                                height: '26px', /* Match select height */
+                                fontSize: '0.75rem',
+                                display: 'flex',
+                                alignItems: 'center'
+                            }}
+                        >
+                            📥 Export
+                        </button>
+                    </div>
                 )}
             </div>
 

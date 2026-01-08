@@ -398,3 +398,28 @@ h1, h2, h3 {
 .history-export-btn:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
+.history-export-select {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 6px; /* Match button radius */
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  height: 26px; /* Match button height explicitly based on history-btn */
+}
+
+.history-export-select:hover, .history-export-select:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.history-export-select option {
+  background: #2a2a2a;
+  color: white;
+  padding: 10px;
+}
