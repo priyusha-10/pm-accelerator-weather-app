@@ -161,7 +161,7 @@ function App() {
       <InfoModal isOpen={isInfoOpen} onClose={() => setIsInfoOpen(false)} />
 
       <footer style={{ marginTop: '3rem', textAlign: 'center', opacity: 0.6 }}>
-        <p>Built by Antigravity for PM Accelerator Assessment</p>
+        <p>Built by Priyusha Chigurupati for PM Accelerator Assessment</p>
       </footer>
     </div>
   )

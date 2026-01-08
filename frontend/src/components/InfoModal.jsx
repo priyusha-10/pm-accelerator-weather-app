@@ -1,4 +1,5 @@
 import React from 'react';
+import coverImage from '../assets/productmanagerinterview_cover.jpg';
 
 const InfoModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
@@ -47,7 +48,7 @@ const InfoModal = ({ isOpen, onClose }) => {
                 <h2 style={{ marginTop: 0, marginBottom: '1rem' }}>About Weather AI</h2>
                 
                 <p style={{ lineHeight: '1.6' }}>
-                    This application was built by <strong>Antigravity</strong> (Google Deepmind) as part of the Technical Assessment.
+                    This application was built by <strong>Priyusha</strong> as part of the Technical Assessment.
                 </p>
 
                 <div style={{ 
@@ -57,24 +58,19 @@ const InfoModal = ({ isOpen, onClose }) => {
                     borderRadius: '12px' 
                 }}>
                     <h3 style={{ marginTop: 0 }}>Product Manager Accelerator</h3>
-                    <p style={{ fontSize: '0.95rem', opacity: 0.9, lineHeight: '1.5' }}>
-                        The Product Manager Accelerator allows you to learn the skills, build the experience, and get the mentorship you need to land your dream Product Manager job.
-                    </p>
+                        The Product Manager Accelerator empowers PMs at every stage with FAANG-level training, AI bootcamps, and executive coaching to land top-tier offers.
+                        Start free today with our resume template at drnancyli.com/pmresume or explore our 500+ trainings on YouTube to land your dream role.
                     
                     {/* Rich Media: YouTube Embed */}
                     <div style={{ marginTop: '1rem', borderRadius: '8px', overflow: 'hidden' }}>
-                        <iframe 
-                            width="100%" 
-                            height="200" 
-                            src="https://www.youtube.com/embed/LXb3EKWsInQ" 
-                            title="YouTube video player" 
-                            frameBorder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowFullScreen
-                        ></iframe>
+                        <img 
+                            src={coverImage} 
+                            alt="PM Accelerator Cover" 
+                            style={{ width: '100%', height: 'auto', display: 'block' }}
+                        />
                     </div>
                     <a 
-                        href="https://www.linkedin.com/company/product-manager-accelerator/" 
+                        href="https://www.linkedin.com/school/pmaccelerator/" 
                         target="_blank" 
                         rel="noreferrer"
                         style={{
