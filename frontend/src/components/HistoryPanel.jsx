@@ -7,10 +7,13 @@ function HistoryPanel({ refreshTrigger }) {
     const [editNote, setEditNote] = useState('');
     const [editStartDate, setEditStartDate] = useState('');
     const [editEndDate, setEditEndDate] = useState('');
+    const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
     const loadHistory = async () => {
         try {
+            console.log("Loading history...");
             const data = await api.getRecords();
+            console.log("History loaded:", data);
             setHistory(data);
         } catch (err) {
             console.error("Failed to load history", err);
@@ -23,9 +26,21 @@ function HistoryPanel({ refreshTrigger }) {
 
     const handleDelete = async (e, id) => {
         e.stopPropagation();
-        if (window.confirm('Delete this record?')) {
-            await api.deleteRecord(id);
-            loadHistory();
+            if (deleteConfirmId === id) {
+                // Second click - actually delete
+                try {
+                    await api.deleteRecord(id);
+                    setDeleteConfirmId(null);
+                    loadHistory();
+                } catch (err) {
+                    console.error("Delete failed:", err);
+                    alert("Failed to delete record.");
+                }
+            } else {
+            // First click - show confirmation state
+            setDeleteConfirmId(id);
+            // Auto-reset after 3 seconds if not confirmed
+            setTimeout(() => setDeleteConfirmId(null), 3000);
         }
     };
 
@@ -132,11 +147,12 @@ function HistoryPanel({ refreshTrigger }) {
                                         ✎
                                     </button>
                                     <button 
-                                        className="history-btn delete-btn" 
+                                        className={`history-btn delete-btn ${deleteConfirmId === item.id ? 'confirm-delete' : ''}`}
                                         onClick={(e) => handleDelete(e, item.id)}
-                                        title="Delete"
+                                        title={deleteConfirmId === item.id ? "Click again to confirm" : "Delete"}
+                                        style={deleteConfirmId === item.id ? { borderColor: '#ff6b6b', color: '#ff6b6b', background: 'rgba(255, 107, 107, 0.1)' } : {}}
                                     >
-                                        🗑️
+                                        {deleteConfirmId === item.id ? 'Sure?' : '🗑️'}
                                     </button>
                                 </>
                             )}

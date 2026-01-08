@@ -78,7 +78,12 @@ function App() {
 
   const handleSave = async (data) => {
     try {
-      await api.saveRecord(data)
+      const today = new Date().toLocaleDateString('en-CA');
+      await api.saveRecord({ 
+        ...data, 
+        start_date: dateRange.start || today,
+        end_date: dateRange.end || today 
+      })
       setRefreshHistory(prev => prev + 1) // Force history refresh
       alert("Weather data saved!")
     } catch (err) {

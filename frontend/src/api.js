@@ -31,8 +31,9 @@ export const api = {
         const payload = {
             location: weatherData.location,
             temperature: weatherData.current.temperature_2m,
-            description: weatherData.current.weather_code.toString(), // Storing code for now, or could map to text
-            date_range: new Date().toISOString().split('T')[0], // Defaulting to today's date for this assessment
+            description: weatherData.current.weather_code.toString(),
+            start_date: weatherData.start_date || null,
+            end_date: weatherData.end_date || null,
             note: ''
         };
 

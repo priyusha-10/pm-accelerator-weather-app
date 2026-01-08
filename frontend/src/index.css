@@ -265,6 +265,17 @@ h1, h2, h3 {
   transition: all 0.2s ease;
   flex-shrink: 0; 
   font-size: 0.8rem; /* Smaller icons inside buttons */
+  position: relative;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.history-btn.confirm-delete {
+  width: auto;
+  padding: 0 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-width: 1px;
 }
 
 .delete-btn:hover {
