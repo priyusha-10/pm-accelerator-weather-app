@@ -105,6 +105,24 @@ function WeatherCard({ data, onSave }) {
                     })}
                 </div>
             </div>
+            
+            {/* Location Map */}
+            <div style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem', textAlign: 'left' }}>
+                    🗺️ Map View: {location}
+                </h3>
+                <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: '12px', background: 'rgba(0,0,0,0.2)' }}>
+                   <iframe 
+                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none', filter: 'invert(90%) hue-rotate(180deg)' }}
+                        src={`https://maps.google.com/maps?q=${encodeURIComponent(location)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                        title={`Map of ${location}`}
+                        loading="lazy"
+                    ></iframe>
+                </div>
+                <p style={{ textAlign: 'center', fontSize: '0.75rem', opacity: 0.6, marginTop: '0.5rem' }}>
+                    Live map data from Google Maps
+                </p>
+            </div>
 
             <button 
                 onClick={() => onSave(data)} 
