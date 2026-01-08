@@ -1,0 +1,27 @@
+# Dependencies
+node_modules
+.venv
+__pycache__
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Large Files & Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+*.pdf
+*.zip
+*.tar.gz
+
+# Environment Variables
+.env
+
+# IDEs
+.vscode
+.idea
+
+Antigravity.exe
+*.exe
