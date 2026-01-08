@@ -133,14 +133,21 @@ def get_current_weather(location: str, unit: str = "celsius", start_date: str = 
 def get_weather_by_coordinates(lat: float, lon: float, unit: str = "celsius"):
     # Weather
     weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max&timezone=auto&temperature_unit={unit}&forecast_days=8"
-    weather_res = requests.get(weather_url).json()
     
+    try:
+        weather_res = requests.get(weather_url).json()
+    except Exception:
+         raise HTTPException(status_code=503, detail="Weather service unavailable")
+         
+    if "current" not in weather_res:
+        raise HTTPException(status_code=500, detail="Failed to fetch weather data for coordinates")
+
     return {
         "location": "Your Location",
         "latitude": lat,
         "longitude": lon,
-        "current": weather_res["current"],
-        "daily": weather_res["daily"],
+        "current": weather_res.get("current", {}),
+        "daily": weather_res.get("daily", {}),
         "current_units": weather_res.get("current_units", {})
     }
 

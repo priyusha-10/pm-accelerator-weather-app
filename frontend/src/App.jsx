@@ -122,7 +122,7 @@ function App() {
           <div className="search-container" style={{ marginBottom: '2rem', display: 'flex', gap: '0.5rem' }}>
             <SearchBar onSearch={handleSearch} />
             <button 
-                onClick={handleLocationSearch}
+                onClick={() => handleLocationSearch()}
                 title="Use Current Location"
                 className="location-btn"
                 disabled={isLoading}
