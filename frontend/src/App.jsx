@@ -153,7 +153,6 @@ function App() {
 
         <aside className="history-sidebar">
           <div className="history-card-container">
-            <h3 className="history-title">Search History</h3>
             <HistoryPanel refreshTrigger={refreshHistory} />
           </div>
         </aside>

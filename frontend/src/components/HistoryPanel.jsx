@@ -102,135 +102,141 @@ function HistoryPanel({ refreshTrigger }) {
     };
 
     return (
-        <div className="history-panel-scroll">
-            {history.length === 0 && (
-                <div style={{ textAlign: 'center', opacity: 0.6, padding: '2rem' }}>
-                    <p>No saved searches yet.</p>
-                </div>
-            )}
-            
-            {history.map(item => (
-                <div key={item.id} className="history-card">
-                    <div className="history-header">
-                        <div className="history-icon-wrapper">
-                            {getWeatherIcon(item.description)}
+        <>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>
+                <h3 className="history-title" style={{ margin: 0, border: 'none', padding: 0, fontSize: '1.1rem' }}>Search History</h3>
+                {history.length > 0 && (
+                    <button 
+                        onClick={handleExport}
+                        className="history-export-btn"
+                        style={{ marginTop: 0, width: 'auto', padding: '0.3rem 0.6rem', fontSize: '0.7rem' }}
+                    >
+                        📥 Export JSON
+                    </button>
+                )}
+            </div>
+
+            <div className="history-panel-scroll">
+                {history.length === 0 && (
+                    <div style={{ textAlign: 'center', opacity: 0.6, padding: '2rem' }}>
+                        <p>No saved searches yet.</p>
+                    </div>
+                )}
+                
+                {history.map(item => (
+                    <div key={item.id} className="history-card">
+                        <div className="history-header">
+                            <div className="history-icon-wrapper">
+                                {getWeatherIcon(item.description)}
+                            </div>
+                            <div className="history-info">
+                                <h4 className="history-location" title={item.location}>{item.location}</h4>
+                            </div>
+                            
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                {editingId === item.id ? (
+                                    <>
+                                        <button 
+                                            className="history-btn save-btn" 
+                                            onClick={() => saveEdit(item.id)}
+                                            title="Save Changes"
+                                        >
+                                            ✓
+                                        </button>
+                                        <button 
+                                            className="history-btn" 
+                                            onClick={cancelEdit}
+                                            title="Cancel"
+                                        >
+                                            ✕
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button 
+                                            className="history-btn" 
+                                            onClick={() => startEdit(item)}
+                                            title="Edit"
+                                        >
+                                            ✎
+                                        </button>
+                                        <button 
+                                            className={`history-btn delete-btn ${deleteConfirmId === item.id ? 'confirm-delete' : ''}`}
+                                            onClick={(e) => handleDelete(e, item.id)}
+                                            title={deleteConfirmId === item.id ? "Click again to confirm" : "Delete"}
+                                            style={deleteConfirmId === item.id ? { borderColor: '#ff6b6b', color: '#ff6b6b', background: 'rgba(255, 107, 107, 0.1)' } : {}}
+                                        >
+                                            {deleteConfirmId === item.id ? 'Sure?' : '🗑️'}
+                                        </button>
+                                    </>
+                                )}
+                            </div>
                         </div>
-                        <div className="history-info">
-                            <h4 className="history-location" title={item.location}>{item.location}</h4>
-                        </div>
-                        
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+
+                        {/* Date Range / Edit Inputs - Moved to separate row for full width */}
+                        <div className="history-meta">
                             {editingId === item.id ? (
-                                <>
-                                    <button 
-                                        className="history-btn save-btn" 
-                                        onClick={() => saveEdit(item.id)}
-                                        title="Save Changes"
-                                    >
-                                        ✓
-                                    </button>
-                                    <button 
-                                        className="history-btn" 
-                                        onClick={cancelEdit}
-                                        title="Cancel"
-                                    >
-                                        ✕
-                                    </button>
-                                </>
+                                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
+                                    <input 
+                                        type="date"
+                                        value={editStartDate}
+                                        onChange={(e) => setEditStartDate(e.target.value)}
+                                        style={{ padding: '0.2rem', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.2)', color: 'white', fontSize: '0.8rem' }}
+                                    />
+                                    <span style={{ alignSelf: 'center', color: 'rgba(255,255,255,0.5)' }}>to</span>
+                                    <input 
+                                        type="date"
+                                        value={editEndDate}
+                                        onChange={(e) => setEditEndDate(e.target.value)}
+                                        style={{ padding: '0.2rem', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.2)', color: 'white', fontSize: '0.8rem' }}
+                                    />
+                                </div>
                             ) : (
                                 <>
-                                    <button 
-                                        className="history-btn" 
-                                        onClick={() => startEdit(item)}
-                                        title="Edit"
-                                     >
-                                        ✎
-                                    </button>
-                                    <button 
-                                        className={`history-btn delete-btn ${deleteConfirmId === item.id ? 'confirm-delete' : ''}`}
-                                        onClick={(e) => handleDelete(e, item.id)}
-                                        title={deleteConfirmId === item.id ? "Click again to confirm" : "Delete"}
-                                        style={deleteConfirmId === item.id ? { borderColor: '#ff6b6b', color: '#ff6b6b', background: 'rgba(255, 107, 107, 0.1)' } : {}}
-                                    >
-                                        {deleteConfirmId === item.id ? 'Sure?' : '🗑️'}
-                                    </button>
+                                    {item.start_date && item.end_date && (
+                                        <span className="history-date-range">📅 {item.start_date} to {item.end_date}</span>
+                                    )}
                                 </>
                             )}
                         </div>
-                    </div>
 
-                    {/* Date Range / Edit Inputs - Moved to separate row for full width */}
-                    <div className="history-meta">
-                        {editingId === item.id ? (
-                            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
-                                <input 
-                                    type="date"
-                                    value={editStartDate}
-                                    onChange={(e) => setEditStartDate(e.target.value)}
-                                    style={{ padding: '0.2rem', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.2)', color: 'white', fontSize: '0.8rem' }}
-                                />
-                                <span style={{ alignSelf: 'center', color: 'rgba(255,255,255,0.5)' }}>to</span>
-                                <input 
-                                    type="date"
-                                    value={editEndDate}
-                                    onChange={(e) => setEditEndDate(e.target.value)}
-                                    style={{ padding: '0.2rem', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.2)', color: 'white', fontSize: '0.8rem' }}
-                                />
+                        {/* Stats Grid */}
+                        <div className="history-stats-grid">
+                            <div className="stat-box">
+                                <span className="stat-label">Temperature</span>
+                                <span className="stat-value">{Math.round(item.temperature)}°C</span>
                             </div>
-                        ) : (
-                            <>
-                                {item.start_date && item.end_date && (
-                                    <span className="history-date-range">📅 {item.start_date} to {item.end_date}</span>
-                                )}
-                            </>
-                        )}
-                    </div>
-
-                    {/* Stats Grid */}
-                    <div className="history-stats-grid">
-                        <div className="stat-box">
-                            <span className="stat-label">Temperature</span>
-                            <span className="stat-value">{Math.round(item.temperature)}°C</span>
+                            <div className="stat-box">
+                                <span className="stat-label">Condition</span>
+                                <span className="stat-value">{getWeatherDesc(item.description)}</span>
+                            </div>
                         </div>
-                        <div className="stat-box">
-                            <span className="stat-label">Condition</span>
-                            <span className="stat-value">{getWeatherDesc(item.description)}</span>
+
+                        {/* Notes Section */}
+                        <div className="history-notes-section">
+                            {editingId === item.id ? (
+                                <div className="history-note-edit">
+                                    <input 
+                                        className="history-note-input"
+                                        value={editNote} 
+                                        onChange={(e) => setEditNote(e.target.value)} 
+                                        placeholder="Add a note..." 
+                                    />
+                                </div>
+                            ) : (
+                                <div className={`history-note-display ${item.note ? 'has-note' : 'no-note'}`}>
+                                    {item.note ? (
+                                        <span>📝 {item.note}</span>
+                                    ) : (
+                                        <span style={{ opacity: 0.5 }}>...</span>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
-
-                    {/* Notes Section */}
-                    <div className="history-notes-section">
-                        {editingId === item.id ? (
-                            <div className="history-note-edit">
-                                <input 
-                                    className="history-note-input"
-                                    value={editNote} 
-                                    onChange={(e) => setEditNote(e.target.value)} 
-                                    placeholder="Add a note..." 
-                                />
-                            </div>
-                        ) : (
-                            <div className={`history-note-display ${item.note ? 'has-note' : 'no-note'}`}>
-                                {item.note ? (
-                                    <span>📝 {item.note}</span>
-                                ) : (
-                                    <span style={{ opacity: 0.5 }}>...</span>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                </div>
-            ))}
-            
-            {history.length > 0 && (
-                <button 
-                    onClick={handleExport}
-                    className="history-export-btn"
-                >
-                    📥 Export JSON
-                </button>
-            )}
-        </div>
+                ))}
+            </div>
+        </>
     );
 }
 
