@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function DateRangePicker({ onDateChange, disabled }) {
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+function DateRangePicker({ startDate, endDate, onDateChange, disabled }) {
     const [error, setError] = useState('');
 
     // Calculate min/max dates (7 days ago to 16 days ahead)
@@ -40,15 +38,23 @@ function DateRangePicker({ onDateChange, disabled }) {
         return true;
     };
 
+    // Validate on mount or when props change to show errors if needed
     useEffect(() => {
-        if (validateDates(startDate, endDate)) {
-            onDateChange(startDate, endDate);
-        }
+        validateDates(startDate, endDate);
     }, [startDate, endDate]);
 
+    const handleStartChange = (e) => {
+        const newStart = e.target.value;
+        onDateChange(newStart, endDate);
+    };
+
+    const handleEndChange = (e) => {
+        const newEnd = e.target.value;
+        onDateChange(startDate, newEnd);
+    };
+
     const handleClear = () => {
-        setStartDate('');
-        setEndDate('');
+        onDateChange('', '');
         setError('');
     };
 
@@ -72,7 +78,7 @@ function DateRangePicker({ onDateChange, disabled }) {
                     <input 
                         type="date"
                         value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
+                        onChange={handleStartChange}
                         min={getMinDate()}
                         max={getMaxDate()}
                         disabled={disabled}
@@ -87,7 +93,7 @@ function DateRangePicker({ onDateChange, disabled }) {
                     <input 
                         type="date"
                         value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
+                        onChange={handleEndChange}
                         min={getMinDate()}
                         max={getMaxDate()}
                         disabled={disabled}

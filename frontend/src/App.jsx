@@ -85,6 +85,7 @@ function App() {
         end_date: dateRange.end || today 
       })
       setRefreshHistory(prev => prev + 1) // Force history refresh
+      setDateRange({ start: '', end: '' }) // Clear date range
       alert("Weather data saved!")
     } catch (err) {
       console.error(err)
@@ -132,6 +133,8 @@ function App() {
           </div>
 
           <DateRangePicker 
+            startDate={dateRange.start}
+            endDate={dateRange.end}
             onDateChange={(start, end) => setDateRange({ start, end })}
             disabled={isLoading}
           />

@@ -12,9 +12,7 @@ function HistoryPanel({ refreshTrigger }) {
 
     const loadHistory = async () => {
         try {
-            console.log("Loading history...");
             const data = await api.getRecords();
-            console.log("History loaded:", data);
             setHistory(data);
         } catch (err) {
             console.error("Failed to load history", err);
