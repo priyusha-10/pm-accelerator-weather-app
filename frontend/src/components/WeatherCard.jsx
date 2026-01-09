@@ -133,7 +133,7 @@ function WeatherCard({ data, onSave, dateRange, setDateRange, isLoading }) {
                 </h3>
                 <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: '12px', background: 'rgba(0,0,0,0.2)' }}>
                    <iframe 
-                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none', filter: 'invert(90%) hue-rotate(180deg)' }}
+                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
                         src={`https://maps.google.com/maps?q=${encodeURIComponent(location)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
                         title={`Map of ${location}`}
                         loading="lazy"
