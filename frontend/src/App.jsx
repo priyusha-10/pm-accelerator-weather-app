@@ -95,10 +95,10 @@ function App() {
 
   return (
     <div className="app-container">
-      <header style={{ textAlign: 'center', marginBottom: '2rem', position: 'relative' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-            {/* ForecastHub Logo: Sun with Future/Past Orbital Arrows */}
-            <svg width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <header className="app-header">
+        <div className="header-content">
+            {/* ForecastHub Logo */}
+            <svg width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
                 {/* Central Sun (The Hub) */}
                 <circle cx="32" cy="32" r="12" fill="url(#sunGradient)" />
                 
@@ -117,28 +117,28 @@ function App() {
                     </linearGradient>
                 </defs>
             </svg>
-            <h1 style={{ fontSize: '3rem', margin: 0, fontWeight: 800, background: 'linear-gradient(to right, #fff, #b7e4ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', textShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+            <h1 className="header-title">
                 ForecastHub
             </h1>
         </div>
-        <p style={{ opacity: 0.9, fontSize: '1.1rem', letterSpacing: '0.5px' }}>Plan Ahead, Look Back</p>
+        <p className="header-slogan">Plan Ahead, Look Back</p>
         
-        <div style={{ position: 'absolute', top: 0, right: 0, display: 'flex', gap: '0.5rem' }}>
+        <div className="header-controls">
              <button 
                 onClick={toggleUnit}
-                style={{ fontSize: '0.8rem', padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.1)' }}
+                className="control-btn"
              >
                 {unit === 'celsius' ? '°C' : '°F'}
              </button>
              <button 
                 onClick={() => setIsInfoOpen(true)}
-                style={{ fontSize: '0.8rem', padding: '0.5rem 1rem' }}
+                className="control-btn"
              >
                 ℹ️ Info
              </button>
         </div>
       </header>
-      <main style={{ display: 'grid', gridTemplateColumns: '1fr 450px', gap: '2rem' }}>
+      <main className="app-main-layout">
         <section className="glass-panel" style={{ minHeight: '400px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
              <h2>Current Weather</h2>

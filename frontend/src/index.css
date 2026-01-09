@@ -440,3 +440,203 @@ input::placeholder {
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ===== RESPONSIVE LAYOUT ===== */
+
+/* Desktop Layout (Default > 1024px) */
+.app-main-layout {
+  display: grid;
+  grid-template-columns: 1fr 450px;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* Tablet & Small Laptop (max-width: 1024px) */
+@media (max-width: 1024px) {
+  body {
+    padding: 1.5rem;
+  }
+
+  .app-main-layout {
+    grid-template-columns: 1fr; /* Single column */
+    gap: 2rem;
+  }
+
+  /* Reset Sidebar constraints for vertical stacking */
+  .history-sidebar {
+    flex: auto;
+    max-width: 100%;
+    height: auto;
+    min-height: auto;
+  }
+
+  .history-card-container {
+    height: auto;
+    max-height: 500px; /* Constrain height to prevent infinite scroll */
+    min-height: 300px;
+  }
+  
+  .history-panel-scroll {
+    overflow-y: auto;
+  }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+    align-items: flex-start; /* Ensure scroll from top */
+  }
+
+  /* Header adjustments */
+  header h1 {
+    font-size: 2rem !important;
+  }
+  
+  header svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  header p {
+    font-size: 0.9rem !important;
+  }
+
+  .app-main-layout {
+    gap: 1.5rem;
+  }
+
+  /* Weather Card Adjustments */
+  .weather-card h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  .weather-card h1 {
+    font-size: 2.5rem !important;
+  }
+
+  /* Stats Grid: break into 2 columns on small screens */
+  .weather-card > div[style*='grid-template-columns: repeat(3, 1fr)'] {
+     grid-template-columns: repeat(3, 1fr) !important; /* Keep 3 if fits, or change to 1 */
+  }
+
+  /* Forecast Grid: allow scroll or wrap? Grid is usually fine */
+  .forecast-grid {
+    gap: 0.3rem !important;
+  }
+  
+  /* Inputs & Buttons - Touch Friendly */
+  button, input, select {
+    min-height: 44px; /* Apple Human Interface Guidelines */
+    font-size: 16px; /* Prevent iOS zoom */
+  }
+  
+  .search-container {
+    flex-direction: row; /* Keep row */
+  }
+  
+  .history-card-container {
+      padding: 1rem;
+  }
+}
+
+/* Ultra Small (max-width: 480px) */
+@media (max-width: 480px) {
+    .stat-item {
+        gap: 0.2rem;
+    }
+    
+    .history-stats-row {
+        gap: 0.5rem;
+        justify-content: space-between;
+    }
+    
+    .history-header {
+        grid-template-columns: 32px 1fr auto;
+    }
+    
+    .history-icon-wrapper {
+        width: 32px;
+        height: 32px;
+        font-size: 1.2rem;
+    }
+}
+
+
+/* ===== RESPONSIVE HEADER ===== */
+.app-header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-top: 0.5rem;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.header-title {
+  font-size: 3rem;
+  margin: 0;
+  font-weight: 800;
+  background: linear-gradient(to right, #fff, #b7e4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.header-slogan {
+  opacity: 0.9;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.header-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.control-btn {
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+  min-height: auto; /* Reset global min-height for these if preferred tiny */
+}
+
+/* Mobile Header Overrides (Append to end of CSS to ensure precedence) */
+@media (max-width: 768px) {
+  .app-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 0;
+  }
+
+  .header-controls {
+    position: static; /* Stack naturally */
+    align-self: flex-end; /* Right align */
+    order: -1; /* Move to top visually */
+    margin-bottom: 0.5rem;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .header-content {
+    flex-wrap: wrap; /* Allow wrapping if title is very long */
+   }
+   
+  .header-title {
+    font-size: 2.2rem !important; /* Force smaller size on mobile */
+  }
+
+  .header-slogan {
+    font-size: 0.95rem;
+  }
+}
+
