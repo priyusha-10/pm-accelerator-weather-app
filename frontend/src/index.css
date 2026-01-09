@@ -361,40 +361,82 @@ input::placeholder {
   margin: 0;
   width: auto;
   background: var(--blue-dark);
-  height: 32px;
-  padding: 0 1rem;
-  font-size: 0.8rem;
+  height: 36px; /* Slightly taller */
+  padding: 0 1.2rem;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
-  justify-content: center; /* Center content */
-  gap: 0.5rem; /* Space between icon and text */
+  justify-content: center;
+  gap: 0.5rem;
   border: 1px solid var(--glass-border);
-  white-space: nowrap; /* Prevent stacking/wrapping */
+  white-space: nowrap;
+  border-radius: 20px; /* Fully rounded */
 }
 
 .history-export-btn:hover {
   background: var(--blue-medium);
 }
 
-.history-export-select {
-  padding: 0 0.8rem;
-  font-size: 0.8rem;
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.1); /* Lighter glass */
-  color: var(--heading-color);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  outline: none;
-  cursor: pointer;
-  height: 32px;
-  transition: all 0.2s;
+/* Custom Dropdown Implementation */
+.custom-dropdown {
+  position: relative;
+  width: 120px;
 }
 
-.history-export-select:hover {
+.custom-dropdown-trigger {
+  width: 100%;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  color: var(--heading-color);
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between !important; /* Force space between */
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.custom-dropdown-trigger:hover {
+  background: rgba(255, 255, 255, 0.2);
   border-color: var(--blue-light);
+}
+
+.custom-dropdown-options {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: #528ab4;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  display: none; /* Hidden by default */
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.custom-dropdown-options.show {
+  display: block;
+  animation: fadeIn 0.2s ease;
+}
+
+.custom-dropdown-options div {
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.custom-dropdown-options div:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
-.history-export-select option {
-  background: #528ab4; /* Lighter blue (Blue Dark) */
-  color: white;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }

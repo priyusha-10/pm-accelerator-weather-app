@@ -9,6 +9,14 @@ function HistoryPanel({ refreshTrigger }) {
     const [editEndDate, setEditEndDate] = useState('');
     const [deleteConfirmId, setDeleteConfirmId] = useState(null);
     const [exportFormat, setExportFormat] = useState('json');
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    const handleSelectFormat = (fmt) => {
+        setExportFormat(fmt);
+        setIsDropdownOpen(false);
+    };
+
+
 
     const loadHistory = async () => {
         try {
@@ -25,20 +33,17 @@ function HistoryPanel({ refreshTrigger }) {
 
     const handleDelete = async (e, id) => {
         e.stopPropagation();
-            if (deleteConfirmId === id) {
-                // Second click - actually delete
-                try {
-                    await api.deleteRecord(id);
-                    setDeleteConfirmId(null);
-                    loadHistory();
-                } catch (err) {
-                    console.error("Delete failed:", err);
-                    alert("Failed to delete record.");
-                }
-            } else {
-            // First click - show confirmation state
+        if (deleteConfirmId === id) {
+            try {
+                await api.deleteRecord(id);
+                setDeleteConfirmId(null);
+                loadHistory();
+            } catch (err) {
+                console.error("Delete failed:", err);
+                alert("Failed to delete record.");
+            }
+        } else {
             setDeleteConfirmId(id);
-            // Auto-reset after 3 seconds if not confirmed
             setTimeout(() => setDeleteConfirmId(null), 3000);
         }
     };
@@ -172,7 +177,6 @@ function HistoryPanel({ refreshTrigger }) {
         // Helper to format "YYYY-MM-DD" to "MMM D"
         const fmt = (d) => {
             const date = new Date(d);
-            // Appending 'T00:00' prevents timezone shifts when parsing YYYY-MM-DD
             const localDate = new Date(d + 'T00:00'); 
             return localDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         };
@@ -187,21 +191,36 @@ function HistoryPanel({ refreshTrigger }) {
                 <h3 className="history-title">History</h3>
                 {history.length > 0 && (
                     <div className="history-controls">
-                        <select 
-                            value={exportFormat} 
-                            onChange={(e) => setExportFormat(e.target.value)}
-                            className="history-export-select"
-                        >
-                            <option value="json">JSON</option>
-                            <option value="csv">CSV</option>
-                            <option value="md">Markdown</option>
-                            <option value="xml">XML</option>
-                        </select>
+                        {/* Custom Dropdown */}
+                        <div className="custom-dropdown" style={{ position: 'relative' }}>
+                            <button 
+                                className="custom-dropdown-trigger"
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
+                            >
+                                <span style={{ marginRight: 'auto', fontWeight: 500 }}>{exportFormat.toUpperCase()}</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.8 }}>
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <div className={`custom-dropdown-options ${isDropdownOpen ? 'show' : ''}`}>
+                                <div onMouseDown={() => handleSelectFormat('json')}>JSON</div>
+                                <div onMouseDown={() => handleSelectFormat('csv')}>CSV</div>
+                                <div onMouseDown={() => handleSelectFormat('md')}>Markdown</div>
+                                <div onMouseDown={() => handleSelectFormat('xml')}>XML</div>
+                            </div>
+                        </div>
+
                         <button 
                             onClick={handleExport}
                             className="history-export-btn"
                         >
-                            📥 Export
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span>Export</span>
                         </button>
                     </div>
                 )}
