@@ -96,8 +96,32 @@ function App() {
   return (
     <div className="app-container">
       <header style={{ textAlign: 'center', marginBottom: '2rem', position: 'relative' }}>
-        <h1 style={{ fontSize: '2.5rem', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>Weather AI</h1>
-        <p style={{ opacity: 0.8 }}>Real-time forecasts powered by PM Accelerator</p>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
+            {/* ForecastHub Logo: Sun with Future/Past Orbital Arrows */}
+            <svg width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Central Sun (The Hub) */}
+                <circle cx="32" cy="32" r="12" fill="url(#sunGradient)" />
+                
+                {/* Top Orbit (Plan Ahead -> Right) */}
+                <path d="M16 26C18.5 20 24 16 32 16C40 16 46 20 48 26" stroke="#4DA1FF" strokeWidth="4" strokeLinecap="round" />
+                <path d="M48 22L52 26L48 30" stroke="#4DA1FF" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+
+                {/* Bottom Orbit (Look Back <- Left) */}
+                <path d="M48 38C45.5 44 40 48 32 48C24 48 18 44 16 38" stroke="#4DA1FF" strokeWidth="4" strokeLinecap="round" />
+                <path d="M16 42L12 38L16 34" stroke="#4DA1FF" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+
+                <defs>
+                    <linearGradient id="sunGradient" x1="20" y1="20" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                        <stop stopColor="#FDB813"/>
+                        <stop offset="1" stopColor="#FF8C00"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <h1 style={{ fontSize: '3rem', margin: 0, fontWeight: 800, background: 'linear-gradient(to right, #fff, #b7e4ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', textShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                ForecastHub
+            </h1>
+        </div>
+        <p style={{ opacity: 0.9, fontSize: '1.1rem', letterSpacing: '0.5px' }}>Plan Ahead, Look Back</p>
         
         <div style={{ position: 'absolute', top: 0, right: 0, display: 'flex', gap: '0.5rem' }}>
              <button 
