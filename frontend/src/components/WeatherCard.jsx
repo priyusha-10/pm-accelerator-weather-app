@@ -72,13 +72,13 @@ function WeatherCard({ data, onSave, dateRange, setDateRange, isLoading }) {
             </div>
             )}
 
-            {/* Daily Forecast - Show all days in range or next 7 days */}
+            {/* Daily Forecast - Show all days in range or next 5 days */}
             <div className="forecast-section" style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
                 <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem', textAlign: 'left' }}>
-                    {date_range ? 'Daily Weather' : '7-Day Forecast'}
+                    {date_range ? 'Daily Weather' : '5-Day Forecast'}
                 </h3>
-                <div className="forecast-grid" style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(daily.time?.length || 7, 7)}, 1fr)`, gap: '0.5rem' }}>
-                    {(date_range ? daily.time : daily.time.slice(1, 9)).map((time, i) => {
+                <div className="forecast-grid" style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(daily.time?.length || 5, 5)}, 1fr)`, gap: '0.5rem' }}>
+                    {(date_range ? daily.time : daily.time.slice(1, 6)).map((time, i) => {
                         const index = date_range ? i : i + 1;
                         const date = new Date(time);
                         const code = daily.weather_code ? daily.weather_code[index] : 0;

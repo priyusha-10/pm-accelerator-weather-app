@@ -128,8 +128,8 @@ input::placeholder {
 
 /* ===== HISTORY SIDEBAR ===== */
 .history-sidebar {
-  flex: 0 0 380px;
-  max-width: 380px;
+  flex: 0 0 450px;
+  max-width: 450px;
   display: flex;
   flex-direction: column;
   height: 0;

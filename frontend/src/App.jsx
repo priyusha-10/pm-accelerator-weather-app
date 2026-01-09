@@ -114,7 +114,7 @@ function App() {
              </button>
         </div>
       </header>
-      <main style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '2rem' }}>
+      <main style={{ display: 'grid', gridTemplateColumns: '1fr 450px', gap: '2rem' }}>
         <section className="glass-panel" style={{ minHeight: '400px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
              <h2>Current Weather</h2>
