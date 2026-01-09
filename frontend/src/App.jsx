@@ -132,13 +132,6 @@ function App() {
             </button>
           </div>
 
-          <DateRangePicker 
-            startDate={dateRange.start}
-            endDate={dateRange.end}
-            onDateChange={(start, end) => setDateRange({ start, end })}
-            disabled={isLoading}
-          />
-
           {error && (
             <div style={{ padding: '1rem', background: 'rgba(255, 100, 100, 0.2)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255,100,100,0.3)' }}>
                 ⚠️ {error}
@@ -146,7 +139,13 @@ function App() {
           )}
 
           {currentWeather ? (
-            <WeatherCard data={currentWeather} onSave={handleSave} />
+            <WeatherCard 
+                data={currentWeather} 
+                onSave={handleSave} 
+                dateRange={dateRange}
+                setDateRange={setDateRange}
+                isLoading={isLoading}
+            />
           ) : (
             !error && <div style={{ textAlign: 'center', opacity: 0.6, marginTop: '4rem' }}>
               <p>Type a location above to get started.</p>

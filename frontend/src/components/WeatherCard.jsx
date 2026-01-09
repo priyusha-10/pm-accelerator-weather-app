@@ -1,4 +1,7 @@
-function WeatherCard({ data, onSave }) {
+import React from 'react';
+import DateRangePicker from './DateRangePicker';
+
+function WeatherCard({ data, onSave, dateRange, setDateRange, isLoading }) {
     if (!data) return null;
 
     const { location, current, daily, current_units, date_range } = data;
@@ -106,6 +109,23 @@ function WeatherCard({ data, onSave }) {
                 </div>
             </div>
             
+            {/* Date Picker (Moved Below Forecast) */}
+            <div style={{ marginTop: '1.5rem' }}>
+                <DateRangePicker 
+                    startDate={dateRange.start}
+                    endDate={dateRange.end}
+                    onDateChange={(start, end) => setDateRange({ start, end })}
+                    disabled={isLoading}
+                />
+            </div>
+
+            <button 
+                onClick={() => onSave(data)} 
+                style={{ marginTop: '1.5rem', width: '100%', background: 'rgba(255,255,255,0.2)' }}
+            >
+                Save to History
+            </button>
+
             {/* Location Map */}
             <div style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
                 <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem', textAlign: 'left' }}>
@@ -123,13 +143,6 @@ function WeatherCard({ data, onSave }) {
                     Live map data from Google Maps
                 </p>
             </div>
-
-            <button 
-                onClick={() => onSave(data)} 
-                style={{ marginTop: '1.5rem', width: '100%', background: 'rgba(255,255,255,0.2)' }}
-            >
-                Save to History
-            </button>
         </div>
     );
 }
