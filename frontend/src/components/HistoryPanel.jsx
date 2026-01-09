@@ -166,12 +166,27 @@ function HistoryPanel({ refreshTrigger }) {
         return codes[c] || 'Unknown';
     };
 
+    const formatDisplayDate = (start, end) => {
+        if (!start || !end) return 'No dates';
+        
+        // Helper to format "YYYY-MM-DD" to "MMM D"
+        const fmt = (d) => {
+            const date = new Date(d);
+            // Appending 'T00:00' prevents timezone shifts when parsing YYYY-MM-DD
+            const localDate = new Date(d + 'T00:00'); 
+            return localDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        };
+
+        if (start === end) return fmt(start);
+        return `${fmt(start)} - ${fmt(end)}`;
+    };
+
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid var(--glass-border)', paddingBottom: '1rem' }}>
-                <h3 className="history-title" style={{ margin: 0, border: 'none', padding: 0 }}>History</h3>
+            <div className="history-panel-header">
+                <h3 className="history-title">History</h3>
                 {history.length > 0 && (
-                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <div className="history-controls">
                         <select 
                             value={exportFormat} 
                             onChange={(e) => setExportFormat(e.target.value)}
@@ -185,15 +200,6 @@ function HistoryPanel({ refreshTrigger }) {
                         <button 
                             onClick={handleExport}
                             className="history-export-btn"
-                            style={{ 
-                                marginTop: 0, 
-                                width: 'auto', 
-                                padding: '0 0.8rem', 
-                                height: '26px',
-                                fontSize: '0.75rem',
-                                display: 'flex',
-                                alignItems: 'center'
-                            }}
                         >
                             📥 Export
                         </button>
@@ -216,39 +222,33 @@ function HistoryPanel({ refreshTrigger }) {
                             </div>
                             <div className="history-info">
                                 <h4 className="history-location" title={item.location}>{item.location}</h4>
+                                {/* View Mode: Show Date Range in Header */}
+                                {editingId !== item.id && (
+                                    <div className="history-meta" style={{ marginTop: '0.2rem' }}>
+                                        {item.start_date && item.end_date ? (
+                                            <span className="history-date-range" style={{ opacity: 0.8, fontSize: '0.85rem' }}>
+                                                {formatDisplayDate(item.start_date, item.end_date)}
+                                            </span>
+                                        ) : (
+                                            <span className="history-date-range" style={{ opacity: 0.5 }}>No date range</span>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                             
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
                                 {editingId === item.id ? (
                                     <>
-                                        <button 
-                                            className="history-btn save-btn" 
-                                            onClick={() => saveEdit(item.id)}
-                                            title="Save Changes"
-                                        >
-                                            ✓
-                                        </button>
-                                        <button 
-                                            className="history-btn" 
-                                            onClick={cancelEdit}
-                                            title="Cancel"
-                                        >
-                                            ✕
-                                        </button>
+                                        <button className="history-btn save-btn" onClick={() => saveEdit(item.id)} title="Save">✓</button>
+                                        <button className="history-btn" onClick={cancelEdit} title="Cancel">✕</button>
                                     </>
                                 ) : (
                                     <>
-                                        <button 
-                                            className="history-btn" 
-                                            onClick={() => startEdit(item)}
-                                            title="Edit"
-                                        >
-                                            ✎
-                                        </button>
+                                        <button className="history-btn" onClick={() => startEdit(item)} title="Edit">✎</button>
                                         <button 
                                             className={`history-btn delete-btn ${deleteConfirmId === item.id ? 'confirm-delete' : ''}`}
                                             onClick={(e) => handleDelete(e, item.id)}
-                                            title={deleteConfirmId === item.id ? "Click again to confirm" : "Delete"}
+                                            title="Delete"
                                             style={deleteConfirmId === item.id ? { borderColor: '#ff6b6b', color: '#ff6b6b', background: 'rgba(255, 107, 107, 0.1)' } : {}}
                                         >
                                             {deleteConfirmId === item.id ? 'Sure?' : '🗑️'}
@@ -258,44 +258,44 @@ function HistoryPanel({ refreshTrigger }) {
                             </div>
                         </div>
 
-                        {/* Date Range / Edit Inputs - Moved to separate row for full width */}
-                        <div className="history-meta">
-                            {editingId === item.id ? (
-                                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
-                                    <input 
-                                        type="date"
-                                        value={editStartDate}
-                                        onChange={(e) => setEditStartDate(e.target.value)}
-                                        style={{ padding: '0.2rem', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.2)', color: 'white', fontSize: '0.8rem' }}
-                                    />
-                                    <span style={{ alignSelf: 'center', color: 'rgba(255,255,255,0.5)' }}>to</span>
-                                    <input 
-                                        type="date"
-                                        value={editEndDate}
-                                        onChange={(e) => setEditEndDate(e.target.value)}
-                                        style={{ padding: '0.2rem', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.2)', color: 'white', fontSize: '0.8rem' }}
-                                    />
+                        {/* Edit Mode: Dedicated Edit Section */}
+                        {editingId === item.id ? (
+                            <div className="history-edit-section" style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '12px', marginBottom: '0.5rem', border: '1px dashed var(--glass-border)' }}>
+                                <label style={{ display: 'block', fontSize: '0.75rem', marginBottom: '0.5rem', opacity: 0.8 }}>Edit Date Range</label>
+                                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                    <div style={{ flex: 1 }}>
+                                        <input 
+                                            type="date"
+                                            value={editStartDate}
+                                            onChange={(e) => setEditStartDate(e.target.value)}
+                                            style={{ padding: '0.5rem', fontSize: '0.9rem', width: '100%', background: 'rgba(255,255,255,0.05)' }}
+                                        />
+                                    </div>
+                                    <span style={{ fontSize: '1rem', opacity: 0.5 }}>→</span>
+                                    <div style={{ flex: 1 }}>
+                                        <input 
+                                            type="date"
+                                            value={editEndDate}
+                                            onChange={(e) => setEditEndDate(e.target.value)}
+                                            style={{ padding: '0.5rem', fontSize: '0.9rem', width: '100%', background: 'rgba(255,255,255,0.05)' }}
+                                        />
+                                    </div>
                                 </div>
-                            ) : (
-                                <>
-                                    {item.start_date && item.end_date && (
-                                        <span className="history-date-range">📅 {item.start_date} to {item.end_date}</span>
-                                    )}
-                                </>
-                            )}
-                        </div>
-
-                        {/* Stats Grid */}
-                        <div className="history-stats-grid">
-                            <div className="stat-box">
-                                <span className="stat-label">Temperature</span>
-                                <span className="stat-value">{Math.round(item.temperature)}°C</span>
                             </div>
-                            <div className="stat-box">
-                                <span className="stat-label">Condition</span>
-                                <span className="stat-value">{getWeatherDesc(item.description)}</span>
+                        ) : (
+                            /* View Mode: Stats Row */
+                            <div className="history-stats-row">
+                                <div className="stat-item">
+                                    <span className="stat-icon">🌡️</span>
+                                    <span className="stat-value">{Math.round(item.temperature)}°C</span>
+                                </div>
+                                <div className="stat-divider"></div>
+                                <div className="stat-item">
+                                    <span className="stat-icon">☁️</span>
+                                    <span className="stat-value">{getWeatherDesc(item.description)}</span>
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         {/* Notes Section */}
                         <div className="history-notes-section">
@@ -305,15 +305,19 @@ function HistoryPanel({ refreshTrigger }) {
                                         className="history-note-input"
                                         value={editNote} 
                                         onChange={(e) => setEditNote(e.target.value)} 
-                                        placeholder="Add a note..." 
+                                        placeholder="Short note (max 60 chars)..."
+                                        maxLength={60}
                                     />
+                                    <span style={{ fontSize: '0.65rem', opacity: 0.5, marginTop: '0.2rem', display: 'block', textAlign: 'right' }}>
+                                        {editNote.length}/60
+                                    </span>
                                 </div>
                             ) : (
                                 <div className={`history-note-display ${item.note ? 'has-note' : 'no-note'}`}>
                                     {item.note ? (
-                                        <span>📝 {item.note}</span>
+                                        <span>{item.note}</span>
                                     ) : (
-                                        <span style={{ opacity: 0.5 }}>...</span>
+                                        <span style={{ opacity: 0.5, fontStyle: 'italic' }}>No notes added</span>
                                     )}
                                 </div>
                             )}

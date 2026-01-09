@@ -149,12 +149,25 @@ input::placeholder {
   height: 100%;
 }
 
-.history-title {
-  margin: 0 0 1rem 0;
-  font-size: 1.35rem;
+.history-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
   border-bottom: 1px solid var(--glass-border);
   padding-bottom: 1rem;
   flex-shrink: 0;
+}
+
+.history-title {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.history-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 /* ===== HISTORY PANEL LIST ===== */
@@ -195,7 +208,7 @@ input::placeholder {
   gap: 1rem;
   width: 100%;
   margin: 0 auto;
-  background: rgba(0, 0, 0, 0.2); /* Darker tint for contrast inside panel */
+  background: rgba(0, 0, 0, 0.2);
   padding: 1.25rem;
   border-radius: 16px;
   border: 1px solid var(--glass-border);
@@ -288,49 +301,53 @@ input::placeholder {
   padding: 0 0.5rem;
 }
 
-.history-stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
+/* Stats Row (New Horizontal Layout) */
+.history-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
   background: rgba(0, 0, 0, 0.2);
-  padding: 0.875rem;
+  padding: 0.5rem 0.75rem; /* Reduced padding */
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.stat-box {
+.stat-item {
   display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  min-width: 0;
-  overflow: hidden; 
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.stat-label {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  color: var(--blue-light);
-  font-weight: 600;
+.stat-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.stat-icon {
+  font-size: 1.1rem;
 }
 
 .stat-value {
   font-size: 1rem;
   color: var(--heading-color);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 /* Notes */
 .history-note-display {
-  padding: 0.75rem;
+  padding: 0.5rem 0.75rem; /* Reduced padding */
   font-size: 0.9rem;
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.2);
   border: 1px dashed var(--glass-border);
   color: var(--content-color);
   transition: all 0.2s;
-  min-height: 2.5rem;
+  min-height: 2.2rem; /* Slightly reduced min-height */
   display: flex;
   align-items: center;
+  word-break: break-word; /* Ensure long words/text wrap */
+  line-height: 1.3; /* Better spacing for wrapped text */
 }
 
 .history-note-display.has-note {
@@ -341,9 +358,18 @@ input::placeholder {
 
 /* Export Controls */
 .history-export-btn {
-  margin-top: auto;
-  width: 100%;
+  margin: 0;
+  width: auto;
   background: var(--blue-dark);
+  height: 32px;
+  padding: 0 1rem;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center content */
+  gap: 0.5rem; /* Space between icon and text */
+  border: 1px solid var(--glass-border);
+  white-space: nowrap; /* Prevent stacking/wrapping */
 }
 
 .history-export-btn:hover {
@@ -351,22 +377,24 @@ input::placeholder {
 }
 
 .history-export-select {
-  padding: 0.3rem 0.5rem;
-  font-size: 0.75rem;
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.3);
+  padding: 0 0.8rem;
+  font-size: 0.8rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.1); /* Lighter glass */
   color: var(--heading-color);
-  border: 1px solid var(--glass-border);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   outline: none;
   cursor: pointer;
-  height: 26px;
+  height: 32px;
+  transition: all 0.2s;
 }
 
 .history-export-select:hover {
   border-color: var(--blue-light);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .history-export-select option {
-  background: var(--blue-darkest);
+  background: #528ab4; /* Lighter blue (Blue Dark) */
   color: white;
 }
