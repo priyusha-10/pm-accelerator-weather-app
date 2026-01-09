@@ -640,3 +640,91 @@ input::placeholder {
   }
 }
 
+
+
+/* ===== REDESIGNED HEADER (LEFT BRAND, RIGHT CONTROLS) ===== */
+.app-header {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 0.5rem 0;
+  text-align: left; /* Override previous center */
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-logo {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.header-text-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header-title {
+  font-size: 2.2rem;
+  margin: 0;
+  line-height: 1.1;
+  background: linear-gradient(to right, #fff, #b7e4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Remove text-align: center from base if needed */
+}
+
+.header-slogan {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.header-right {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  /* Position: static is default for flex items */
+}
+
+/* Mobile Header Redesign Override */
+@media (max-width: 768px) {
+  .app-header {
+    flex-direction: column; /* Stack on mobile */
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .header-left {
+    width: 100%;
+  }
+
+  .header-right {
+     width: 100%;
+     justify-content: flex-start; /* Align controls to left to match title, or space-between if preferred. Let's match title alignment (left) */
+     padding-left: 3.5rem; /* Indent controls to align with text (logo width is 48px + gap) approx? Or just left. */
+     margin-top: -0.5rem;
+  }
+  
+  /* If screen is very narrow, wrap controls below or shrink title */
+  @media (max-width: 480px) {
+      .app-header {
+          flex-wrap: wrap; 
+      }
+      .header-title {
+          font-size: 1.5rem;
+      }
+      .header-logo {
+          width: 36px;
+          height: 36px;
+      }
+  }
+}
+

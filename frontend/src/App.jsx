@@ -96,9 +96,9 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <div className="header-content">
+        <div className="header-left">
             {/* ForecastHub Logo */}
-            <svg width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+            <svg width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="header-logo">
                 {/* Central Sun (The Hub) */}
                 <circle cx="32" cy="32" r="12" fill="url(#sunGradient)" />
                 
@@ -117,13 +117,14 @@ function App() {
                     </linearGradient>
                 </defs>
             </svg>
-            <h1 className="header-title">
-                ForecastHub
-            </h1>
+            
+            <div className="header-text-group">
+                <h1 className="header-title">ForecastHub</h1>
+                <p className="header-slogan">Plan Ahead, Look Back</p>
+            </div>
         </div>
-        <p className="header-slogan">Plan Ahead, Look Back</p>
         
-        <div className="header-controls">
+        <div className="header-right">
              <button 
                 onClick={toggleUnit}
                 className="control-btn"
