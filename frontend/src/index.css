@@ -1,13 +1,25 @@
 :root {
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --glass-bg: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.8);
-  --accent-color: #ffd700;
+  /* ===== COLOR PALETTE ===== */
+  /* User Provided Colors */
+  --blue-lightest: #95d6ea;
+  --blue-light: #7bc7dd;
+  --blue-medium: #62a1c7;
+  --blue-dark: #528ab4;
+  --blue-darkest: #15719f;
+
+  /* Semantic Variables */
+  --heading-color: #ffffff;
+  --content-color: #e0f7fa; /* Very light blue/white for readability */
+  --accent-color: var(--blue-lightest);
+  
+  /* Glassmorphism Variables (Auto-Contrast) */
+  --glass-bg: rgba(21, 113, 159, 0.3); /* Dark blue tint */
+  --glass-border: rgba(149, 214, 234, 0.3); /* Light blue tint */
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+
+  /* Layout & Spacing */
   --radius-lg: 20px;
   --radius-md: 12px;
-  --shadow-lg: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 }
 
 * {
@@ -18,14 +30,20 @@
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: var(--primary-gradient);
-  color: var(--text-primary);
+  /* Fallback gradient + Image */
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), 
+    url('./assets/weather-bg.png') no-repeat center center fixed;
+  background-size: cover;
+  background-color: var(--blue-darkest); /* Ultimate fallback */
+  
+  color: var(--content-color);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding: 2rem;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 #root {
@@ -33,55 +51,79 @@ body {
   max-width: 1400px;
 }
 
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--heading-color);
+  font-weight: 700;
+  margin-bottom: 0.5em;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+p, span, label, input, select, textarea {
+  color: var(--content-color);
+}
+
+/* ===== COMPONENTS ===== */
+
+/* Glass Panel (Base Card) */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: 2rem;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Buttons */
 button {
   cursor: pointer;
-  border: none;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--heading-color);
   padding: 0.8rem 1.5rem;
   border-radius: var(--radius-md);
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.85rem;
 }
 
 button:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--blue-dark);
+  border-color: var(--blue-light);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-input {
-  background: rgba(255, 255, 255, 0.1);
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Inputs */
+input, select, textarea {
+  background: rgba(0, 0, 0, 0.2);
   border: 1px solid var(--glass-border);
   padding: 0.8rem 1.2rem;
   border-radius: var(--radius-md);
-  color: white;
   width: 100%;
   font-size: 1rem;
+  transition: all 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.4);
+  border-color: var(--blue-light);
 }
 
 input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-input:focus {
-  outline: none;
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-h1, h2, h3 {
-  font-weight: 700;
-  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* ===== HISTORY SIDEBAR ===== */
@@ -90,22 +132,19 @@ h1, h2, h3 {
   max-width: 380px;
   display: flex;
   flex-direction: column;
-  /* Trick to make grid item match height of sibling without expanding row */
   height: 0;
   min-height: 100%;
 }
 
 .history-card-container {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid var(--glass-border);
   border-radius: 20px;
-  /* Use flex column to manage header + scrollable list */
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  /* Remove fixed padding here, apply to children or careful layout */
+  box-shadow: var(--glass-shadow);
   padding: 1.5rem;
   height: 100%;
 }
@@ -113,89 +152,67 @@ h1, h2, h3 {
 .history-title {
   margin: 0 0 1rem 0;
   font-size: 1.35rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.95);
-  letter-spacing: -0.5px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--glass-border);
   padding-bottom: 1rem;
   flex-shrink: 0;
 }
 
 /* ===== HISTORY PANEL LIST ===== */
 .history-panel-scroll {
-  /* Layout */
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  
-  /* Scroll behavior */
   overflow-y: auto;
   overflow-x: hidden;
   flex: 1;
-  
-  /* Container Padding - Equal on all sides, accounting for scrollbar */
   padding: 0.5rem 0.5rem 0.5rem 0; 
-  /* Note: padding-right reduced slightly because scrollbar adds visual weight */
-  
-  /* Ensure children (cards) take full width */
   width: 100%;
 }
 
-/* Custom Scrollbar - Modern & Sleek */
 .history-panel-scroll::-webkit-scrollbar {
   width: 6px;
 }
 
 .history-panel-scroll::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   margin: 4px 0;
 }
 
 .history-panel-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--blue-medium);
   border-radius: 10px;
-  transition: all 0.3s ease;
 }
 
 .history-panel-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--blue-light);
 }
 
 /* ===== HISTORY CARD ===== */
 .history-card {
-  /* Layout */
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  
-  /* Dimensions & Centering */
   width: 100%;
   margin: 0 auto;
-  
-  /* Visuals */
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.2); /* Darker tint for contrast inside panel */
   padding: 1.25rem;
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s ease;
 }
 
 .history-card:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(21, 113, 159, 0.4); /* Blue Tint on hover */
+  border-color: var(--blue-lightest);
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Header Section: 3-Column Grid for strict alignment */
 .history-header {
   display: grid;
-  /* Icon | Content | Action Buttons (Auto width) */
   grid-template-columns: 40px 1fr auto; 
   gap: 0.5rem;
-  align-items: center; /* Center alignment looks better with smaller icons */
+  align-items: center; 
 }
 
 .history-icon-wrapper {
@@ -204,9 +221,9 @@ h1, h2, h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 10px; /* Slightly tighter radius */
-  font-size: 1.5rem; /* Reduced emoji size */
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  font-size: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -214,47 +231,39 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 40px; /* Match new icon height */
-  gap: 0.1rem; /* Tighter gap */
+  min-height: 40px;
+  gap: 0.1rem;
   min-width: 0;
 }
 
 .history-location {
   margin: 0;
-  font-size: 0.95rem; /* Slightly smaller location text */
-  font-weight: 700;
-  color: #fff;
+  font-size: 1rem;
+  color: var(--heading-color);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.2;
 }
 
 .history-meta {
-  font-size: 0.7rem; /* Reduced meta font size */
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
   display: flex;
   flex-direction: column;
   gap: 1px;
-  line-height: 1.1;
 }
 
 .history-date-range {
-  color: #ffd700;
+  color: var(--blue-lightest);
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 0.2rem;
-  white-space: nowrap;
-  /* overflow: hidden;  <-- Removing overflow hidden to prioritize showing full text as requested
-     If it really doesn't fit, it will push layout, but we saved space. */
-  font-size: 0.65rem; /* Smaller font to fit date range */
-  letter-spacing: -0.2px; /* Tighter spacing */
+  font-size: 0.7rem;
 }
 
-/* Action Buttons */
+/* Small Buttons in History */
 .history-btn {
-  width: 26px; /* Reduced from 32px */
+  width: 26px;
   height: 26px;
   padding: 0;
   display: flex;
@@ -262,41 +271,23 @@ h1, h2, h3 {
   justify-content: center;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--content-color);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease;
-  flex-shrink: 0; 
-  font-size: 0.8rem; /* Smaller icons inside buttons */
-  position: relative;
-  z-index: 10;
-  cursor: pointer;
+}
+
+.history-btn:hover {
+  background: var(--blue-medium);
+  color: white;
 }
 
 .history-btn.confirm-delete {
+  background: rgba(255, 80, 80, 0.2);
+  border-color: #ff6b6b;
+  color: #ff6b6b;
   width: auto;
   padding: 0 0.5rem;
-  font-size: 0.7rem;
-  font-weight: 700;
-  border-width: 1px;
 }
 
-.delete-btn:hover {
-  background: rgba(255, 80, 80, 0.2);
-  border-color: rgba(255, 80, 80, 0.3);
-  color: #ffcccc;
-}
-
-.save-btn {
-  color: #98ff98;
-  background: rgba(152, 255, 152, 0.1);
-}
-
-.save-btn:hover {
-  background: rgba(152, 255, 152, 0.2);
-  color: #b0ffb0;
-}
-
-/* Stats Section */
 .history-stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -311,115 +302,71 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  /* Ensure resizing limits are respected in grid */
   min-width: 0;
   overflow: hidden; 
 }
 
 .stat-label {
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
-  opacity: 0.7; /* Increased opacity slightly for better readability at small size */
+  color: var(--blue-light);
   font-weight: 600;
-  letter-spacing: 0; /* Removed spacing to save horizontal space */
 }
 
 .stat-value {
-  font-size: 1rem; /* Slightly reduced from 1.1rem for better fit */
+  font-size: 1rem;
+  color: var(--heading-color);
   font-weight: 700;
-  color: #fff;
-  /* Allow wrapping instead of truncation */
-  white-space: normal;
-  word-wrap: break-word;
-  line-height: 1.3;
 }
 
-/* Notes Section */
-.history-notes-section {
-  width: 100%;
-}
-
+/* Notes */
 .history-note-display {
   padding: 0.75rem;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   border-radius: 10px;
-  cursor: text;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px dashed rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px dashed var(--glass-border);
+  color: var(--content-color);
   transition: all 0.2s;
   min-height: 2.5rem;
   display: flex;
   align-items: center;
 }
 
-.history-note-display:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
 .history-note-display.has-note {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(21, 113, 159, 0.2);
   border-style: solid;
-  border-width: 1px;
-  color: #fff;
+  color: var(--heading-color);
 }
 
-.history-note-edit {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.history-note-input {
-  flex: 1;
-  padding: 0.6rem 0.8rem;
-  font-size: 0.9rem;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  color: white;
-}
-
-.history-note-input:focus {
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(0, 0, 0, 0.4);
-}
-
-/* Export Button */
+/* Export Controls */
 .history-export-btn {
   margin-top: auto;
   width: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  background: var(--blue-dark);
 }
 
 .history-export-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--blue-medium);
 }
 
 .history-export-select {
   padding: 0.3rem 0.5rem;
   font-size: 0.75rem;
-  border-radius: 6px; /* Match button radius */
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--heading-color);
+  border: 1px solid var(--glass-border);
   outline: none;
   cursor: pointer;
-  font-family: inherit;
-  transition: all 0.2s ease;
-  height: 26px; /* Match button height explicitly based on history-btn */
+  height: 26px;
 }
 
-.history-export-select:hover, .history-export-select:focus {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
+.history-export-select:hover {
+  border-color: var(--blue-light);
 }
 
 .history-export-select option {
-  background: #2a2a2a;
+  background: var(--blue-darkest);
   color: white;
-  padding: 10px;
 }

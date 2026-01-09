@@ -168,8 +168,8 @@ function HistoryPanel({ refreshTrigger }) {
 
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>
-                <h3 className="history-title" style={{ margin: 0, border: 'none', padding: 0, fontSize: '1.1rem' }}>History</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid var(--glass-border)', paddingBottom: '1rem' }}>
+                <h3 className="history-title" style={{ margin: 0, border: 'none', padding: 0 }}>History</h3>
                 {history.length > 0 && (
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                         <select 
@@ -188,8 +188,8 @@ function HistoryPanel({ refreshTrigger }) {
                             style={{ 
                                 marginTop: 0, 
                                 width: 'auto', 
-                                padding: '0 0.8rem', /* Horizontal padding only, height fixed by class/flex */
-                                height: '26px', /* Match select height */
+                                padding: '0 0.8rem', 
+                                height: '26px',
                                 fontSize: '0.75rem',
                                 display: 'flex',
                                 alignItems: 'center'
